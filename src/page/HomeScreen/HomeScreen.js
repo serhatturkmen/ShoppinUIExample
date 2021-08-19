@@ -14,18 +14,13 @@ import ProductCard from "../../component/ProductCard";
 
 export default function HomeScreen({ navigation, route }) {
   const [dataProduct, setDataProduct] = useState(data.product);
-  const [SearchText, setSearchText] = useState("");
   const basket = data.basket;
   const products = data.product;
 
   function searchFilter(text) {
-    setSearchText(text);
     const newdata = products.filter((item) => {
-      return (
-        item.productName
-          .toLocaleLowerCase()
-          .indexOf(SearchText.toLocaleLowerCase()) > -1
-      );
+      const productName = item.productName.toLowerCase();
+      return productName.indexOf(text.toLowerCase()) > -1;
     });
     setDataProduct(newdata);
   }
@@ -64,10 +59,7 @@ export default function HomeScreen({ navigation, route }) {
           size={26}
         />
         <TextInput
-          value={SearchText}
-          onChangeText={(text) => {
-            searchFilter(text);
-          }}
+          onChangeText={(text) => searchFilter(text)}
           placeholder={"Search..."}
           style={styles.searchBarInput}
         />
