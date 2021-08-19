@@ -13,9 +13,22 @@ import { MaterialIcons } from "@expo/vector-icons";
 import ProductCard from "../../component/ProductCard";
 
 export default function HomeScreen({ navigation, route }) {
+  const [dataProduct, setDataProduct] = useState(data.product);
   const [SearchText, setSearchText] = useState("");
   const basket = data.basket;
   const products = data.product;
+
+  function searchFilter(text) {
+    setSearchText(text);
+    const newdata = products.filter((item) => {
+      return (
+        item.productName
+          .toLocaleLowerCase()
+          .indexOf(SearchText.toLocaleLowerCase()) > -1
+      );
+    });
+    setDataProduct(newdata);
+  }
   return (
     <SafeAreaView style={styles.main}>
       {/* Header */}
@@ -50,14 +63,21 @@ export default function HomeScreen({ navigation, route }) {
           color={"grey"}
           size={26}
         />
-        <TextInput placeholder={"Search..."} style={styles.searchBarInput} />
+        <TextInput
+          value={SearchText}
+          onChangeText={(text) => {
+            searchFilter(text);
+          }}
+          placeholder={"Search..."}
+          style={styles.searchBarInput}
+        />
       </View>
 
       {/* Content View */}
       <View style={styles.content}>
         <FlatList
           numColumns={2}
-          data={data.product}
+          data={dataProduct}
           keyExtractor={(item, index) => {
             return index.toString();
           }}
